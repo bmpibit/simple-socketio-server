@@ -1,0 +1,12 @@
+{
+  "name": "socket-example",
+  "version": "1.0.0",
+  "description": "A simple socket.io example",
+  "main": "index.js",
+  "author": "Massimo Bergalla",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Semplice esempio sul socket.io</title>
+    <button type="button" onclick="getUrl()">Get Url</button>
+</head>
+<body>
+
+    <ul id="events"></ul>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const $events = document.getElementById('events');
+        const bookingId = 1
+        const jwtToken = 'jwtToken'
+
+        const newItem = (content) => {
+          const item = document.createElement('li');
+          item.innerText = content;
+          return item;
+        };
+
+        const socket = io();
+
+        socket.on('connect', () => {
+          $events.appendChild(newItem('connect'));
+        });
+
+        socket.emit('echo', 'woot', (data) => {
+          console.log(data); // data will be 'woot'
+          $events.appendChild(newItem(data));
+        });
+
+        socket.on('imlive', (data) => {
+          console.log('The server is live: ', new Date(data))
+        });
+
+        const getUrl = () => {
+          socket.emit('ws:videomeeting', { bookingId, jwtToken }, (data) => {
+            console.log(data); // log message received
+          });
+
+          socket.emit('ws:videomeeting:getMeetingUrl', {}, (data) => {
+            console.log(data); // log url received
+          });
+        }
+    </script>
+</body>
+</html>

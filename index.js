@@ -17,18 +17,29 @@ io.on('connect', socket => {
     callback(data);
   });
 
+  // TODO: validazione e parsificazione del token per estrarre se paziente o partner
   socket.on('ws:videomeeting', (data, callback) => {
     bookingId = data.bookingId
     jwtToken = data.jwtToken
-    callback({ message: 'success' });
+    socket.ctx = { bookingId, jwtToken }
+    if (socket.ctx.jwtToken) {
+      callback({
+        status: 'success', data: 'accepted'
+      });
+      return
+    }
+    // in caso di token invalido o non autenticato
+    callback({
+      status: 'error', message: 'Forbidden',
+    });
   });
 
-  let jwtToken, bookingId
-  socket.on('ws:videomeeting:getMeetingUrl', (data, callback) => {
-    callback({
-      url1: 'https://meetingserver.goodme.it/r/5fd099f23289a777147159a63d22a3957cfdab6ac663c3c33b69835e9b6a131a/1',
-      url2: 'https://meetingserver.goodme.it/r/5fd099f23289a777147159a63d22a3957cfdab6ac663c3c33b69835e9b6a131a/2',
-    });
+  socket.on('ws:videomeeting:url', (data, callback) => {
+    if (socket.ctx.jwtToken) {
+      callback({
+        status: 'success', url: 'https://meetingserver.goodme.it/r/5fd099f23289a777147159a63d22a3957cfdab6ac663c3c33b69835e9b6a131a/1', // risposta con url del paziente o del partner
+      });
+    }
   });
 
 });

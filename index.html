@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Semplice esempio sul socket.io</title>
-    <button type="button" onclick="getUrl()">Get Url</button>
+    <button type="button" onclick="getUrl(1, 'jwtToken')">Get Url</button>
+    <button type="button" onclick="getUrl()">Token Invalid</button>
 </head>
 <body>
 
@@ -11,8 +12,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const $events = document.getElementById('events');
-        const bookingId = 1
-        const jwtToken = 'jwtToken'
 
         const newItem = (content) => {
           const item = document.createElement('li');
@@ -35,12 +34,12 @@
           console.log('The server is live: ', new Date(data))
         });
 
-        const getUrl = () => {
+        const getUrl = (bookingId, jwtToken) => {
           socket.emit('ws:videomeeting', { bookingId, jwtToken }, (data) => {
             console.log(data); // log message received
           });
 
-          socket.emit('ws:videomeeting:getMeetingUrl', {}, (data) => {
+          socket.emit('ws:videomeeting:url', {}, (data) => {
             console.log(data); // log url received
           });
         }
